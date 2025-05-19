@@ -86,3 +86,32 @@ If you want to go “full DDD,” you’d augment this with:
 - Clean Architecture gives us the layers & dependency rules, while DDD gives us the modeling discipline.
 
 So you’re not just doing “CRUD”; you’re already speaking the DDD dialect. If you need to deepen, start introducing aggregates, domain events, value objects, and strategic context boundaries.
+
+## Why this structure?
+- Single Generic Base – reduces boilerplate.
+- One Repo per Aggregate – you can later add specialized queries (e.g. GetByNameAsync).
+- DI in Infrastructure – keeps composition in one place.
+- Endpoint Grouping – each entity’s routes live together, improving discoverability and testability.
+
+## Application layer
+Keeping your mapping logic in the Application layer—via those ToDto() / ToDomain() extension methods—gives you several Clean-Architecture and maintainability wins:
+- Single Responsibility & Separation of Concerns
+  - Endpoints stay focused on HTTP: routing, status codes, authorization, etc.
+  - Application mappings handle only the translation between your Domain entities and the external DTO shapes.
+  - If you ever change a DTO (e.g. rename a field, add a view-only property), you update one extension method in Application, not every endpoint.
+- Compile-time Safety & Discoverability
+  - Your mappings are plain C#. The compiler will flag any missing or mistyped fields.
+  - IDE “Go To Definition” will take you directly to the ToDto() logic—no hunting through reflection-based profiles or JSON/XML conventions.
+- Reusability & Consistency
+  - Whether you expose data via Minimal APIs today or add a gRPC service tomorrow, you reuse the same ToDto()/ToDomain() calls.
+  - You guarantee that all endpoints present your entities in exactly the same shape.
+Testability
+  - You can unit-test each mapping extension in isolation, asserting that every property is carried across correctly.
+  - Your endpoints become trivially testable too, since they simply call repo.ListAsync().Select(p=>p.ToDto()).
+
+## Presentation layer
+### Why not use Carter (or another routing/mapping library)?
+Carter is fantastic for organizing routes into modules and providing model-binding, but:
+- It doesn’t replace your need for DTO ↔ Domain mapping: Carter helps you group endpoints, apply filters, and bind parameters cleanly—but under the covers you still need to translate between your internal entities and the external contract. Your ToDto() extensions remain the natural place for that.
+- Zero extra dependencies vs. “magic.”: By writing your own extension methods, there’s no hidden conventions or runtime scanning. Every field is explicit. Adding Carter adds another abstraction layer and its own conventions you and your team must learn and maintain.
+- Finer-grained control: If a single endpoint needs to enrich a DTO with some custom logic (e.g. mask a field, compute a summary), you can simply drop into the extension or the endpoint itself. With profile-based mappers you often have to configure a special case or a custom resolver.
