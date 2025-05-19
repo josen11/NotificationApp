@@ -132,6 +132,9 @@ Insert into NotificationType values ('Test')
 
 ### Scaffold Your Database into Infrastructure Layer
 We can follow the individual approach by db objects, or we can scaffold the entire database. In this case, we will scaffold only the NotificationType table.
+
+To avoid this error, You can add `TrustServerCertificate=True` to your connection string:
+| A connection was successfully established with the server, but then an error occurred during the login process. (provider: SSL Provider, error: 0 - The certificate chain was issued by an authority that is not trusted.)| 
 ```powershell
 cd NotificationApp.Infrastructure
 
@@ -140,7 +143,7 @@ dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 
 # Scaffold only NotificationType (no pluralization, keep names as in DB)
 dotnet ef dbcontext scaffold `
-    "Server=.;Database=LocalServiceCenter;Trusted_Connection=True;" `
+    "Server=.;Database=LocalServiceCenter;Trusted_Connection=True;TrustServerCertificate=True;" `
     Microsoft.EntityFrameworkCore.SqlServer `
     --output-dir Data/Models `
     --context-dir Data `
@@ -165,7 +168,7 @@ dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 
 # Scaffold only NotificationType (no pluralization, keep names as in DB)
 dotnet ef dbcontext scaffold `
-    "Server=.;Database=LocalServiceCenter;Trusted_Connection=True;" `
+    "Server=.;Database=LocalServiceCenter;Trusted_Connection=True;TrustServerCertificate=True;" `
     Microsoft.EntityFrameworkCore.SqlServer `
     --output-dir Data/Models `
     --context-dir Data `
