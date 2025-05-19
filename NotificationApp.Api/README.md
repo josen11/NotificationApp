@@ -211,7 +211,7 @@ Only specific tables (e.g. new or altered ones)
 
 ```powershell
 dotnet ef dbcontext scaffold `
-  "<conn>" `
+  "Server=.;Database=LocalServiceCenter;Trusted_Connection=True;TrustServerCertificate=True;" `
   Microsoft.EntityFrameworkCore.SqlServer `
   --output-dir Data/Models `
   --context-dir Data `
@@ -219,7 +219,7 @@ dotnet ef dbcontext scaffold `
   --no-pluralize `
   --use-database-names `
   --table NotificationType `
-  --table Notification
+  --force
 ```
 
 - Review the diffs in your version control. EF scaffolding may update nullability, column names, or drop/add classes.

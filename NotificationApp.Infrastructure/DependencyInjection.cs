@@ -12,8 +12,8 @@ public static class DependencyInjection
 		this IServiceCollection services,
 		IConfiguration config)
 	{
-		services.AddDbContext<NotificationDbContext>(opts =>
-			opts.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+		//services.AddDbContext<NotificationDbContext>(opts =>
+		//	opts.UseSqlServer(config.GetConnectionString("DefaultConnection")));
 
 		services.AddScoped<IPartnerRepository, PartnerRepository>();
 		services.AddScoped<IParticipantRepository, ParticipantRepository>();
