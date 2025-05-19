@@ -1,4 +1,4 @@
-﻿namespace NotificationApp.Domain;
+﻿namespace NotificationApp.Domain.Entities;
 
 public sealed class NotificationType
 {
