@@ -109,6 +109,19 @@ Testability
   - You can unit-test each mapping extension in isolation, asserting that every property is carried across correctly.
   - Your endpoints become trivially testable too, since they simply call repo.ListAsync().Select(p=>p.ToDto()).
 
+## Infrastructure layer
+- Take care of your EF Core setup, migrations, and database access here.
+- Scaffold your database into this layer using EF Core tools. This gives you a clean separation between your domain model and the database schema.
+- Use the generic repository pattern to abstract away the EF Core details. This allows you to swap out the underlying data access technology in the future if needed.
+- Keep your DbContext and EF Core configurations here. This keeps your domain layer clean and focused on business logic.
+- Use dependency injection to inject your DbContext and repositories into your application layer. This allows you to easily swap out implementations for testing or other purposes.
+
+**IMPORTANT** 
+
+These resources helped out to understand how separate the EF Data models to Clean Architecture Entities using Repository Pattern:
+- [Practical clean architecture with EF Core database first](https://www.youtube.com/watch?v=YJ-PGIJowVQ&t=64s&ab_channel=Codewrinkles).
+- https://stackoverflow.com/questions/60335165/with-entity-framework-core-database-first-approach-how-do-i-separate-my-entity-f
+
 ## Presentation layer
 ### Why not use Carter (or another routing/mapping library)?
 Carter is fantastic for organizing routes into modules and providing model-binding, but:
